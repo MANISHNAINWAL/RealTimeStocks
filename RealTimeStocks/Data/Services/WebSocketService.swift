@@ -8,8 +8,7 @@
 import Foundation
 import Combine
 
-class WebSocketService{
-    
+class WebSocketService: WebSocketServiceProtocol{
     private var task: URLSessionWebSocketTask?
     
     private let url = URL(string: "wss://ws.postman-echo.com/raw")!
