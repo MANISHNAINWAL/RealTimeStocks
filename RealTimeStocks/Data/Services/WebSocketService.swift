@@ -12,10 +12,16 @@ final class WebSocketService: WebSocketServiceProtocol {
     
     private var task: URLSessionWebSocketTask?
     private let subject = PassthroughSubject<String, Never>()
+    private let connectionSubject = CurrentValueSubject<Bool, Never>(false)
+    
     private let url = URL(string: "wss://ws.postman-echo.com/raw")!
     
     var publisher: AnyPublisher<String, Never> {
         subject.eraseToAnyPublisher()
+    }
+    
+    var connectionStatusPublisher: AnyPublisher<Bool, Never> {
+        connectionSubject.eraseToAnyPublisher()
     }
     
     func connect() {
@@ -23,12 +29,15 @@ final class WebSocketService: WebSocketServiceProtocol {
         
         task = URLSession.shared.webSocketTask(with: url)
         task?.resume()
+        
+        connectionSubject.send(true)   // 🔥 connected
         receive()
     }
     
     func disconnect() {
         task?.cancel(with: .goingAway, reason: nil)
         task = nil
+        connectionSubject.send(false)  // 🔥 disconnected
     }
     
     func send(_ message: String) {
@@ -43,14 +52,11 @@ final class WebSocketService: WebSocketServiceProtocol {
         task?.receive { [weak self] result in
             switch result {
             case .success(let message):
-                switch message {
-                case .string(let text):
+                if case .string(let text) = message {
                     self?.subject.send(text)
-                default:
-                    break
                 }
-            case .failure(let error):
-                print("WebSocket receive error:", error)
+            case .failure:
+                self?.connectionSubject.send(false)
             }
             
             self?.receive()

@@ -9,6 +9,7 @@ import Combine
 
 public protocol StockRepositoryProtocol {
     var stocksPublisher: AnyPublisher<[Stock], Never> { get }
+    var connectionStatusPublisher: AnyPublisher<Bool, Never> { get }
     func start()
     func stop()
 }

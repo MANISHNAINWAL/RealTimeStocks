@@ -12,6 +12,9 @@ import SwiftUI
 final class FeedViewModel: ObservableObject {
     
     @Published private(set) var stocks: [Stock] = []
+    @Published private(set) var isConnected: Bool = false
+    
+    private let observeConnectionUseCase: ObserveConnectionStatusUseCase
     
     private let startUseCase: StartFeedUseCase
     private let stopUseCase: StopFeedUseCase
@@ -21,19 +24,26 @@ final class FeedViewModel: ObservableObject {
     
     init(startUseCase: StartFeedUseCase,
          stopUseCase: StopFeedUseCase,
-         observeUseCase: ObserveStocksUseCase) {
+         observeUseCase: ObserveStocksUseCase,
+         observeConnectionUseCase: ObserveConnectionStatusUseCase) {
         
         self.startUseCase = startUseCase
         self.stopUseCase = stopUseCase
         self.observeUseCase = observeUseCase
+        self.observeConnectionUseCase = observeConnectionUseCase
         
         bind()
     }
     
     private func bind() {
+        
         observeUseCase.execute()
             .receive(on: DispatchQueue.main)
             .assign(to: &$stocks)
+        
+        observeConnectionUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isConnected)
     }
     
     func start() { startUseCase.execute() }

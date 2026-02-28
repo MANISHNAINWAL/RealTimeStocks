@@ -21,6 +21,13 @@ struct FeedView: View {
             }
             .navigationTitle("Stocks")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack {
+                        Text(viewModel.isConnected ? "🟢" : "🔴")
+                            .font(.subheadline)
+                    }
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(isRunning ? "Stop" : "Start") {
                         isRunning.toggle()

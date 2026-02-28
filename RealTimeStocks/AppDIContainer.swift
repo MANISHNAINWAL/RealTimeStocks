@@ -16,7 +16,8 @@ final class AppDIContainer {
         FeedViewModel(
             startUseCase: StartFeedUseCase(repository: repository),
             stopUseCase: StopFeedUseCase(repository: repository),
-            observeUseCase: ObserveStocksUseCase(repository: repository)
+            observeUseCase: ObserveStocksUseCase(repository: repository),
+            observeConnectionUseCase: ObserveConnectionStatusUseCase(repository: repository)
         )
     }
 }

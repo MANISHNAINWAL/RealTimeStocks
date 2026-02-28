@@ -21,6 +21,10 @@ final class StockRepository: StockRepositoryProtocol {
         subject.eraseToAnyPublisher()
     }
     
+    var connectionStatusPublisher: AnyPublisher<Bool, Never> {
+        socket.connectionStatusPublisher
+    }
+    
     init(socket: WebSocketServiceProtocol) {
         self.socket = socket
         setupStocks()

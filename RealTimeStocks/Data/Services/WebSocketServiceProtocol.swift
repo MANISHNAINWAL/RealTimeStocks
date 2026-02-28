@@ -9,7 +9,8 @@ import Combine
 
 public protocol WebSocketServiceProtocol {
     var publisher: AnyPublisher<String, Never> { get }
-    
+    var connectionStatusPublisher: AnyPublisher<Bool, Never> { get }
+
     func connect()
     func disconnect()
     func send(_ message: String)
