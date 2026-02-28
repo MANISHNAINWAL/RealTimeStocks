@@ -5,7 +5,12 @@
 //  Created by Manish Nainwal on 27/02/26.
 //
 
-public protocol WebSocketServiceProtocol {    
+import Combine
+
+public protocol WebSocketServiceProtocol {
+    var publisher: AnyPublisher<String, Never> { get }
+    
     func connect()
     func disconnect()
+    func send(_ message: String)
 }
