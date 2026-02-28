@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct RealTimeStocksApp: App {
+    
+    private let container = AppDIContainer()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            FeedView(
+                viewModel: container.makeFeedViewModel()
+            )
         }
     }
 }
